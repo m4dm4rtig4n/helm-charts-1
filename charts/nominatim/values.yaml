@@ -591,6 +591,21 @@ initJob:
   freeze: false
   wikipediaUrl: https://nominatim.org/data/wikimedia-importance.sql.gz
 
+  ## osm2pgsql tuning during `nominatim import`.
+  ## Nominatim invokes osm2pgsql internally and computes the `--cache` flag.
+  ## When `flatnode.enabled=true`, Nominatim forces `--cache 0` because the
+  ## flat-node file replaces the in-memory node cache. On Planet imports this
+  ## still leaves ways/relations processing slower than necessary if RAM is
+  ## available. Setting NOMINATIM_OSM2PGSQL_CACHE overrides the computed value.
+  ## See: https://nominatim.org/release-docs/latest/admin/Import/#flatnode-files
+  osm2pgsql:
+    ## @param initJob.osm2pgsql.cache osm2pgsql `--cache` value in MB (sets NOMINATIM_OSM2PGSQL_CACHE).
+    ## Leave empty (default) to keep Nominatim's computed value untouched.
+    ## Typical Planet OSM tuning: 8000-20000 (8-20 GB) when flatnode is enabled.
+    ## Rule of thumb without flatnode: ~75% of available RAM in MB.
+    ##
+    cache: ""
+
   ## Warm-up step (`nominatim admin --warm`) configuration.
   ## Since Nominatim 5.2.0, the warm step requires explicit timeout overrides
   ## to avoid an asyncio TimeoutError on large imports (notably Planet OSM).

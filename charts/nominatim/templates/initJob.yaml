@@ -189,6 +189,10 @@ spec:
               value: {{ include "nominatim.databaseUser" . }}
             - name: CONTINUE
               value: {{ .Values.initJob.continue | quote }}
+            {{- if .Values.initJob.osm2pgsql.cache }}
+            - name: NOMINATIM_OSM2PGSQL_CACHE
+              value: {{ .Values.initJob.osm2pgsql.cache | quote }}
+            {{- end }}
             {{- if .Values.initJob.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.initJob.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
